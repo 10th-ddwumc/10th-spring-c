@@ -1,4 +1,6 @@
 package com.example.projectsetting.domain.member.enums;
 
-public enum Genger {
+public enum Gender {
+    MALE,
+    FEMALE
 }
