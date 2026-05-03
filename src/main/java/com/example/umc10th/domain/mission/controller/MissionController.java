@@ -7,8 +7,10 @@ import com.example.umc10th.domain.mission.service.MissionService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.global.apiPayload.code.BaseSuccessCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -31,9 +33,12 @@ public class MissionController {
     @GetMapping("/api/{memberId}/missions")
     public ApiResponse<List<MissionResDTO.GetMissions>> getMissions(
             @RequestParam Boolean isSuccess,
-            @PathVariable("memberId") Long memberId
+            @PathVariable("memberId") Long memberId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate lastEndDate, //페이징 커서
+            @RequestParam(required = false) Long lastId, //페이징 커서
+            @RequestParam(defaultValue = "10") int pageSize
     ) {
         BaseSuccessCode code = MissionSuccessCode.FOUND;
-        return ApiResponse.onSuccess(code, missionService.getMissions(isSuccess, memberId));
+        return ApiResponse.onSuccess(code, missionService.getMissions(isSuccess, memberId, lastEndDate, lastId, pageSize));
     }
 }

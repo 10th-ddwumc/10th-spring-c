@@ -1,5 +1,6 @@
 package com.example.umc10th.domain.member.dto;
 
+import com.example.umc10th.domain.mission.dto.HomeMission;
 import com.example.umc10th.domain.mission.dto.MissionResDTO;
 import lombok.Builder;
 
@@ -26,6 +27,6 @@ public class MemberResDTO {
             String location,
             Integer allMissionsCount,
             Integer successMissionsCount,
-            List<MissionResDTO.HomeMission> missions
+            List<HomeMission> missions
     ) {}
 }

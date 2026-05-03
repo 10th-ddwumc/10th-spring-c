@@ -20,7 +20,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     //리뷰 작성
-    @PostMapping("/api/{memberId}/stores/{storeId]/reviews")
+    @PostMapping("/api/{memberId}/stores/{storeId}/reviews")
     public ApiResponse<ReviewResDTO.newReview> addReview(
             @PathVariable("memberId") Long memberId,
             @PathVariable("storeId") Long storeId,
@@ -28,6 +28,5 @@ public class ReviewController {
     ) {
         BaseSuccessCode code = ReviewSuccessCode.ADD_REVIEW_OK;
         return ApiResponse.onSuccess(code, reviewService.addReview(memberId, storeId, dto));
-
     }
 }

@@ -1,9 +1,7 @@
 package com.example.umc10th.domain.mission.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.example.umc10th.domain.mission.enums.StoreCategory;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -11,9 +9,28 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 @Entity
+@Table(name = "store")
 public class Store {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "address")
+    private String address;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id")
+    private Location location;
+
+    @Column(name = "star")
+    private Double star;
+
+    @Column(name = "category")
+    @Enumerated(EnumType.STRING)
+    private StoreCategory category;
+
 }

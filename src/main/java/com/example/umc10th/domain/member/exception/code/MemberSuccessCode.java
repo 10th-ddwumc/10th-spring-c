@@ -21,7 +21,6 @@ public enum MemberSuccessCode implements BaseSuccessCode {
             "홈화면 조회에 성공했습니다.");
     ;
 
-
     private final HttpStatus status;
     private final String code;
     private final String message;

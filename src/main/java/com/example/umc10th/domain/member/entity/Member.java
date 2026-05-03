@@ -1,40 +1,71 @@
 package com.example.umc10th.domain.member.entity;
 
 import com.example.umc10th.domain.member.entity.mapping.MemberFood;
+import com.example.umc10th.domain.member.entity.mapping.MemberTerm;
+import com.example.umc10th.domain.member.enums.Address;
 import com.example.umc10th.domain.member.enums.Gender;
+import com.example.umc10th.domain.member.enums.SocialType;
+import com.example.umc10th.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @Entity
-public class Member {
+@Table(name = "member")
+public class Member extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "email")
     private String email;
 
+    @Column(name = "phone")
     private String phoneNumber;
 
+    @Column(name = "point")
     private Integer point;
 
+    @Column(name = "profile_url")
     private String profileUrl;
 
+    @Column(name = "birth", nullable = false)
     private LocalDate birth;
 
-    private String address;
+    @Column(name = "address", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Address address;
 
-    private Gender gender;
+    @Column(name = "detail_address", nullable = false)
+    private String detailAddress;
 
-    private List<MemberFood> foods;
+    @Column(name = "social_uid", nullable = false)
+    private String socialUid;
+
+    @Column(name = "social_type")
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
+
+    @Column(name = "gender", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Gender gender = Gender.NONE;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private List<MemberFood> memberFoodList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberTerm> memberTermList = new ArrayList<>();
 
 }

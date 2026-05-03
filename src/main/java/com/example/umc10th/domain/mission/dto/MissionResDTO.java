@@ -20,13 +20,4 @@ public class MissionResDTO {
             Integer point
     ) {}
 
-    @Builder
-    public record HomeMission(
-            Long id,
-            String storeName,
-            Integer price,
-            Integer point,
-            StoreCategory category,
-            LocalDate endDate
-    ) {}
 }
