@@ -14,4 +14,14 @@ public class MissionResDTO {
             Long reward,
             String status
     ){}
+
+    public record MissionCard(
+            Long missionId,
+            String store,
+            String category,
+            Integer point,
+            Integer reward,
+            Integer price,
+            String dDay
+    ){}
 }

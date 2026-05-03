@@ -1,21 +1,26 @@
 package com.example.projectsetting.domain.member.dto;
 
+import lombok.Builder;
+
 import java.util.List;
 
 public class MemberResDTO {
 
 
+    @Builder
     public record Signup(
         Long userId,
         String name
     ){}
 
+    @Builder
     public record Dashboard(
            String region,
            Integer currentCount,
            List<MissionCard> missions
     ){}
 
+    @Builder
     public record MissionCard(
             Long missionId,
             String store,
@@ -26,6 +31,7 @@ public class MemberResDTO {
             String dDay
     ){}
 
+    @Builder
     public record Mypage(
             Long memberId,
             String socialId,
