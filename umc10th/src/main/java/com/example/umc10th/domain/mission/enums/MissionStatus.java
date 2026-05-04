@@ -6,12 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 
-public enum Address {
-    ANAM("안암동"),
-    SAMSUNG("삼성동"),
-    YEOUIDO("여의도동"),
-    PANGYO("판교동"),
-    SHINCHON("신촌동");
+public enum MissionStatus {
+    ONGOING("진행 중"),
+    COMPLETED("진행 완료");
 
     private final String description;
 }

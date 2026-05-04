@@ -10,6 +10,7 @@ public class MemberReqDTO {
     }
 
     //마이페이지
+    @Getter
     public static class GetInfo { // record 대신 static class 사용
         private Long id;
     }

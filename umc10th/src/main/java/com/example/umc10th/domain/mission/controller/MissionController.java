@@ -1,25 +1,52 @@
 package com.example.umc10th.domain.mission.controller;
 
-import com.example.umc10th.domain.mission.dto.MissionReqDTO;
-import com.example.umc10th.domain.mission.dto.MissionResDTO;
+import com.example.umc10th.domain.member.entity.Member;
+import com.example.umc10th.domain.mission.dto.MissionReqDto;
+import com.example.umc10th.domain.mission.dto.MissionResDto;
+import com.example.umc10th.domain.mission.exception.code.MissionSuccessCode;
+import com.example.umc10th.domain.mission.service.MissionService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
+@RequiredArgsConstructor
+@RequestMapping("/api/missions")
 public class MissionController {
 
-    @PostMapping("/stores/{storeId}/missions")
-    public ApiResponse<MissionResDTO.CreateMissionResultDto> createMission(
-            @PathVariable Long storeId,
-            @RequestBody MissionReqDTO.CreateMissionDto request) {
-        return null;
+    private final MissionService missionService;
+
+    // 홈 화면
+    @GetMapping("/summary")
+    public ApiResponse<MissionResDto.MissionList> missionSummary(
+            @AuthenticationPrincipal Member member,
+            @ModelAttribute MissionReqDto.MissionSummary request
+    ){
+        MissionResDto.MissionList result=missionService.missionSummary(member, request);
+
+        return ApiResponse.onSuccess(MissionSuccessCode.MISSION_SUMMARIZED, result);
     }
 
-    @PostMapping("/missions/{missionId}/challenges")
-    public ApiResponse<MissionResDTO.ChallengeMissionResultDto> challengeMission(
-            @PathVariable Long missionId,
-            @RequestBody MissionReqDTO.ChallengeMissionDto request) {
-        return null;
+    // 미션 목록 조회
+    @GetMapping("")
+    public ApiResponse<MissionResDto.MissionList> getMissionList(
+            @AuthenticationPrincipal Member member,
+            @ModelAttribute MissionReqDto.GetMissionList request
+    ){
+        MissionResDto.MissionList result=missionService.getMissionList(member, request);
+
+        return ApiResponse.onSuccess(MissionSuccessCode.MISSION_CHECKED, result);
+    }
+
+    //미션 성공 누르기
+    @PatchMapping("/{memberMissionId}")
+    public ApiResponse<MissionResDto.CompleteMission> completeMission(
+            @AuthenticationPrincipal Member member,
+            @PathVariable Long memberMissionId
+    ){
+        MissionResDto.CompleteMission result=missionService.completeMission(member, memberMissionId);
+
+        return ApiResponse.onSuccess(MissionSuccessCode.MISSION_COMPLETED, result);
     }
 }

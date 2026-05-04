@@ -17,9 +17,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public MemberResDTO.GetInfo getInfo(MemberReqDTO.GetInfo dto) {
-        Long memberId = dto.id();
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findById(dto.getId())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-        return MemberConverter.toGetInfo(member);
+        return MemberConverter.toGetInfoResDTO(member);
     }
 }
