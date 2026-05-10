@@ -66,5 +66,20 @@ public class MissionConverter {
                 .build();
     }
 
+    // 오프셋 기반 - Page<MemberMission> -> MissionResDto.MissionOffsetList
+    public static MissionResDto.MissionOffsetList toMissionOffsetListDto(Page<MemberMission> missionPage) {
+        List<MissionResDto.Mission> missionDtos = missionPage.getContent().stream()
+                .map(MissionConverter::toMissionResDto)
+                .collect(Collectors.toList());
+
+        return MissionResDto.MissionOffsetList.builder()
+                .missionList(missionDtos)
+                .currentPage(missionPage.getNumber())
+                .totalPages(missionPage.getTotalPages())
+                .totalCount(missionPage.getTotalElements())
+                .hasMore(missionPage.hasNext())
+                .build();
+    }
+
 
 }

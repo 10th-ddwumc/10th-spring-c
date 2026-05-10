@@ -33,4 +33,14 @@ public class MissionResDto {
             LocalDateTime updatedAt
     ){}
 
+    // 진행중인 미션 조회 (오프셋 기반 페이지네이션 응답)
+    @Builder
+    public record MissionOffsetList(
+            List<Mission> missionList,
+            int currentPage,
+            int totalPages,
+            long totalCount,
+            boolean hasMore
+    ){}
+
 }

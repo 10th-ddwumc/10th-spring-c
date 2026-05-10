@@ -39,4 +39,14 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Lo
             "AND mm.member=:member "+
             "AND mm.status='COMPLETED' ")
     Integer countCompletedMissionByLocationId(@Param("member") Member member, @Param("locationId") Long locationId);
+
+    // 오프셋 기반 페이지네이션 - 진행중인 미션 조회
+    @Query(value = "SELECT mm FROM MemberMission mm " +
+            "JOIN FETCH mm.mission m " +
+            "JOIN FETCH m.store s " +
+            "WHERE mm.member = :member AND mm.status = :status " +
+            "ORDER BY mm.id DESC",
+            countQuery = "SELECT COUNT(mm) FROM MemberMission mm " +
+                    "WHERE mm.member = :member AND mm.status = :status")
+    Page<MemberMission> findByMemberAndStatus(@Param("member") Member member, @Param("status") String status, Pageable pageable);
 }
