@@ -1,0 +1,35 @@
+package com.example.umc10th.domain.member.dto;
+
+import com.example.umc10th.domain.member.entity.Food;
+import com.example.umc10th.domain.member.enums.Gender;
+import jakarta.validation.constraints.*;
+
+import java.time.LocalDate;
+import java.util.List;
+
+public class MemberReqDTO {
+
+    public record GetInfo(
+            @NotNull(message = "id값은 필수입니다.")
+            Long id
+    ) {}
+
+    public record signUp(
+            @NotBlank(message = "이름은 필수입니다.")
+            @Size(max = 20, message = "이름은 20자 이하로 입력해주세요.")
+            String name,
+
+            @NotNull(message = "성별은 필수입니다.")
+            Gender gender,
+
+            @NotNull(message = "생년월일은 필수입니다.")
+            @Past(message = "생년월일은 오늘 이전 날짜여야 합니다.")
+            LocalDate birth,
+
+            @NotBlank(message = "주소는 필수입니다.")
+            String address,
+
+            @NotEmpty(message = "선호 음식은 최소 1개 이상 선택해주세요.")
+            List<Food> foods
+    ) {}
+}
