@@ -1,9 +1,9 @@
 package com.example.umc10th.domain.mission.repository;
 
 import com.example.umc10th.domain.mission.dto.HomeMission;
-import com.example.umc10th.domain.mission.dto.MissionResDTO;
 import com.example.umc10th.domain.mission.entity.Mission;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -80,4 +80,7 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
                                                     String location,
                                                     Pageable pageable);
 
+    Slice<Mission> findMissionsByStore_IdAndIdLessThanOrderByIdDesc(Long storeId, Long idIsLessThan, Pageable pageable);
+
+    Slice<Mission> findMissionsByStore_IdOrderByIdDesc(Long storeId, Pageable pageable);
 }

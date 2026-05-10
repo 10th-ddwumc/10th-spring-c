@@ -40,24 +40,24 @@ public class Member extends BaseEntity {
     @Column(name = "profile_url")
     private String profileUrl;
 
-    @Column(name = "birth", nullable = false)
+    @Column(name = "birth")
     private LocalDate birth;
 
-    @Column(name = "address", nullable = false)
+    @Column(name = "address")
     @Enumerated(EnumType.STRING)
     private Address address;
 
-    @Column(name = "detail_address", nullable = false)
+    @Column(name = "detail_address")
     private String detailAddress;
 
-    @Column(name = "social_uid", nullable = false)
+    @Column(name = "social_uid")
     private String socialUid;
 
     @Column(name = "social_type")
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
-    @Column(name = "gender", nullable = false)
+    @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     @Builder.Default
     private Gender gender = Gender.NONE;

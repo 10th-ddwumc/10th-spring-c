@@ -1,9 +1,8 @@
 package com.example.umc10th.domain.mission.dto;
 
-import com.example.umc10th.domain.mission.enums.StoreCategory;
 import lombok.Builder;
 
-import java.time.LocalDate;
+import java.util.List;
 
 public class MissionResDTO {
 
@@ -18,6 +17,14 @@ public class MissionResDTO {
             String storeName,
             Integer price,
             Integer point
+    ) {}
+
+    //가게 내 미션 조회
+    @Builder
+    public record GetMission(
+            Long missionId,
+            Integer point,
+            String conditional
     ) {}
 
 }

@@ -1,8 +1,12 @@
 package com.example.umc10th.domain.mission.repository;
 
+import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -31,4 +35,17 @@ public interface MemberMissionRepository extends JpaRepository<MemberMission, Lo
                     "and mm.isSuccess = true"
     )
     Integer countSuccessMissionsByLocation(Long memberId, String location);
+
+    //진행중/진행완료 미션 조회(오프셋기반 페이징)
+    @Query(
+            "select mm from MemberMission mm " +
+                    "join fetch mm.mission m " +
+                    "where mm.member.id = :memberId " +
+                    "and mm.isSuccess = :isSuccess "
+    )
+    Page<MemberMission> findAllByMemberAndIsSuccess(
+            @Param("memberId") Long memberId,
+            @Param("isSuccess") Boolean isSuccess,
+            Pageable pageable
+    );
 }
