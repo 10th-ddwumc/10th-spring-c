@@ -7,6 +7,8 @@ import com.example.projectsetting.domain.member.entity.Member;
 import com.example.projectsetting.domain.member.exception.MemberException;
 import com.example.projectsetting.domain.member.exception.code.MemberErrorCode;
 import com.example.projectsetting.domain.member.repository.MemberRepository;
+import com.example.projectsetting.domain.mission.entity.Mission;
+import com.example.projectsetting.domain.mission.repository.MissionRepository;
 import com.example.projectsetting.global.apiPayload.ApiResponse;
 import com.example.projectsetting.global.apiPayload.code.BaseSuccessCode;
 import lombok.RequiredArgsConstructor;
@@ -19,29 +21,37 @@ import java.util.List;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final MissionRepository missionRepository;
 
     public ApiResponse<MemberResDTO.Signup> signup(BaseSuccessCode code, MemberReqDTO.Signup dto) {
 
         return null;
     }
 
-    public ApiResponse<MemberResDTO.Dashboard> getDashboard(BaseSuccessCode code, String authorization) {
+    public MemberResDTO.Dashboard getDashboard(String authorization) {
 
+        //임시값
         Long memberId = 1L;
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND));
-        return ApiResponse.onSuccess(code, MemberConverter.toDashboard(member));
+                .orElseThrow(()-> new MemberException(MemberErrorCode.NOT_FOUND));
+        String location = member.getAddress();
+
+        List<Mission> missions = missionRepository.findMissionByLocation(location, memberId);
+
+        return MemberConverter.toResultDashboard(member,missions);
     }
 
-    public ApiResponse<MemberResDTO.Mypage> getMypage(BaseSuccessCode code, String authorization) {
 
+    public MemberResDTO.Mypage getMypage(String authorization) {
+
+        //임시값
         Long memberId = 1L;
 
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND));
-
-        return ApiResponse.onSuccess(code, MemberConverter.toMypage(member));
+                .orElseThrow(()-> new MemberException(MemberErrorCode.NOT_FOUND));
+        return MemberConverter.toResultMypage(member);
     }
+
 
 }

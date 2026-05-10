@@ -16,10 +16,12 @@ public class ReviewPhoto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //리뷰 아이디
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
     private Review review;
 
+    //사진 url
     @Column(name = "photo_url", nullable = true)
     private String photoUrl;
 

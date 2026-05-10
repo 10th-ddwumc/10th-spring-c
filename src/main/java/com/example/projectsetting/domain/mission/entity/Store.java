@@ -1,5 +1,6 @@
 package com.example.projectsetting.domain.mission.entity;
 
+import com.example.projectsetting.domain.mission.enums.Category;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,6 +25,10 @@ public class Store {
 
     @Column(name = "address")
     private String address;
+
+    @Column(name = "category")
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     @ManyToOne(fetch =  FetchType.LAZY)
     @JoinColumn(name = "location_id")

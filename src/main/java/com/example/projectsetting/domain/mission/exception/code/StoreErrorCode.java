@@ -7,12 +7,14 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum MissionErrorCode implements BaseErrorCode {
-    QUERY_NOT_VALID(HttpStatus.BAD_REQUEST,
-            "MISSION400_1",
-            "잘못된 조회 조건입니다."
-    );
+public enum StoreErrorCode implements BaseErrorCode {
+    NOT_FOUND(HttpStatus.NOT_FOUND,
+            "STORE400_1",
+            "해당 가게를 찾을 수 없습니다."),
+    ;
+
     private final HttpStatus status;
-    private final  String code;
+    private final String code;
     private final String message;
+
 }

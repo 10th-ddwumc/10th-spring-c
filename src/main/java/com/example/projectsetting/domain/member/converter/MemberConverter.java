@@ -3,12 +3,16 @@ package com.example.projectsetting.domain.member.converter;
 import com.example.projectsetting.domain.member.dto.MemberReqDTO;
 import com.example.projectsetting.domain.member.dto.MemberResDTO;
 import com.example.projectsetting.domain.member.entity.Member;
+import com.example.projectsetting.domain.mission.dto.MissionResDTO;
+import com.example.projectsetting.domain.mission.entity.Mission;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MemberConverter {
 
-    public static MemberResDTO.Mypage toMypage(Member member){
+    //
+    public static MemberResDTO.Mypage toResultMypage(Member member){
         return MemberResDTO.Mypage.builder()
                 .memberId(member.getId())
                 .socialId(member.getSocialId())
@@ -19,11 +23,27 @@ public class MemberConverter {
                 .build();
     }
 
-    public static MemberResDTO.Dashboard toDashboard(Member member){
+    public static MemberResDTO.Dashboard toResultDashboard(
+            Member member,
+            List<Mission> missions){
+        List<MemberResDTO.MissionCard> missionCards = new ArrayList<>();
+
+        for(Mission mission : missions){
+            MemberResDTO.MissionCard card = MemberResDTO.MissionCard.builder()
+                    .missionId(mission.getId())
+                    .store(mission.getStore().getName())
+                    .category(mission.getStore().getCategory().name())
+                    .point(mission.getPoint())
+                    .reward(mission.getReward().intValue())
+                    .dDay("D-7")
+                    .build();
+
+            missionCards.add(card);
+        }
         return MemberResDTO.Dashboard.builder()
                 .region(member.getAddress())
                 .currentCount(0)
-                .missions(List.of())
+                .missions(missionCards)
                 .build();
     }
 

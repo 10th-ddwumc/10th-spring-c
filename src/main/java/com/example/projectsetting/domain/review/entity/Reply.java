@@ -21,6 +21,11 @@ public class Reply {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    //답글 내용
+    @Column(name="content", nullable = false)
+    private String content;
+
+    //리뷰
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "review_id")
     private Review review;

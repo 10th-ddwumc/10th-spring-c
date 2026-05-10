@@ -18,6 +18,7 @@ public class MemberController {
 
     private final MemberService memberService;
 
+    //회원가입
     @PostMapping
     public ApiResponse<MemberResDTO.Signup> signup(
             @RequestBody MemberReqDTO.Signup dto
@@ -26,20 +27,24 @@ public class MemberController {
         return memberService.signup(code,dto);
     }
 
+    //홈화면
     @GetMapping("/dashboard")
         public ApiResponse<MemberResDTO.Dashboard> getDashboard(
                 @RequestHeader("Authorization") String authorization
     ) {
         BaseSuccessCode code = MemberSuccessCode.OK;
-        return memberService.getDashboard(code,authorization);
+        MemberResDTO.Dashboard result = memberService.getDashboard(authorization);
+        return ApiResponse.onSuccess(code,result);
     }
 
+    //마이페이지
     @GetMapping("/me")
         public ApiResponse<MemberResDTO.Mypage> getMypage(
                 @RequestHeader("Authorization") String authorization
     ){
         BaseSuccessCode code = MemberSuccessCode.OK;
-        return memberService.getMypage(code, authorization);
+        MemberResDTO.Mypage result = memberService.getMypage(authorization);
+        return ApiResponse.onSuccess(code, result);
     }
 
 }
