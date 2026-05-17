@@ -32,15 +32,15 @@ public class ReviewController {
         return ApiResponse.onSuccess(code, result);
     }
 
-    //생성한 리뷰 조회하기
-    @GetMapping("stores/{storeId}")
+    //내가 생성한 리뷰 조회하기
+    @GetMapping("/{userId}")
     public ApiResponse<ReviewResDTO.Pagination<ReviewResDTO.GetReview>> getReviews(
-            @PathVariable Long storeId,
+            @PathVariable Long userId,
             @RequestParam Integer pageSize,
             @RequestParam String cursor,
             @RequestParam String query
     ){
         BaseSuccessCode code = ReviewSuccessCode.OK;
-        return ApiResponse.onSuccess(code, reviewService.getReviews(storeId,pageSize, cursor, query));
+        return ApiResponse.onSuccess(code, reviewService.getReviews(userId,pageSize, cursor, query));
     }
 }

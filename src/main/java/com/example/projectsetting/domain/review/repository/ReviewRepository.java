@@ -7,7 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ReviewRepository extends JpaRepository<Review,Long> {
-    Slice<Review> findReviewByStore_IdAndIdLessThanOrderByIdDesc(Long storeId, long idCursor, PageRequest pageRequest);
+    Slice<Review> findReviewByMember_IdAndIdLessThanOrderByIdDesc(
+            Long memberId,
+            long idCursor,
+            PageRequest pageRequest);
 
     @Query("""
         select r

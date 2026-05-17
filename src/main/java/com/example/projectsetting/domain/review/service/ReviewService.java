@@ -58,7 +58,7 @@ public class ReviewService {
 
     //리뷰 조회
     public ReviewResDTO.Pagination<ReviewResDTO.GetReview> getReviews(
-            Long storeId,
+            Long userId,
             Integer pageSize,
             String cursor,
             String query) {
@@ -79,11 +79,11 @@ public class ReviewService {
                 case "id":
                     //커서 타입 변환
                     Long prevCursor = Long.parseLong(cursorSplit[0]);
-                    idCursor = Long.parseLong(cursorSplit[1]);
+                    idCursor = Long.parseLong(cursorSplit[0]);
 
                     //리뷰 조회 & Where 절에 커서값 기입
-                    reviewList = reviewRepository.findReviewByStore_IdAndIdLessThanOrderByIdDesc(
-                            storeId,
+                    reviewList = reviewRepository.findReviewByMember_IdAndIdLessThanOrderByIdDesc(
+                            userId,
                             idCursor,
                             pageRequest
                     );
@@ -96,7 +96,7 @@ public class ReviewService {
 
                     //리뷰 조회 & Where 절에 커서값 기입
                     reviewList = reviewRepository.findReviewByRatingCursor(
-                            storeId,
+                            userId,
                             ratingCursor,
                             idCursor,
                             pageRequest
@@ -112,12 +112,12 @@ public class ReviewService {
             switch (query.toLowerCase()){
                 case "id":
                     reviewList = reviewRepository.findReviewById(
-                            storeId,
+                            userId,
                             pageRequest);
                     break;
                 case "rating":
                     reviewList = reviewRepository.findReviewByRating(
-                            storeId,
+                            userId,
                             pageRequest
                     );
                     break;

@@ -9,8 +9,9 @@ public class MemberResDTO {
 
     @Builder
     public record Signup(
-        Long userId,
-        String name
+        Long memberId,
+        String name,
+        String email
     ){}
 
     @Builder

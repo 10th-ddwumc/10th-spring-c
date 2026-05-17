@@ -2,7 +2,12 @@ package com.example.projectsetting.domain.member.converter;
 
 import com.example.projectsetting.domain.member.dto.MemberReqDTO;
 import com.example.projectsetting.domain.member.dto.MemberResDTO;
+import com.example.projectsetting.domain.member.entity.Food;
 import com.example.projectsetting.domain.member.entity.Member;
+import com.example.projectsetting.domain.member.entity.Term;
+import com.example.projectsetting.domain.member.entity.mapping.MemberFood;
+import com.example.projectsetting.domain.member.entity.mapping.MemberTerm;
+import com.example.projectsetting.domain.member.enums.SocialType;
 import com.example.projectsetting.domain.mission.dto.MissionResDTO;
 import com.example.projectsetting.domain.mission.entity.Mission;
 
@@ -47,20 +52,38 @@ public class MemberConverter {
                 .build();
     }
 
-    public static Member toMember(MemberReqDTO.Signup dto) {
+    public static Member toSignup(MemberReqDTO.Signup dto, String encodedPassword) {
         return Member.builder()
                 .name(dto.name())
-                .phone(dto.phoneNum())
+                .password(encodedPassword)
                 .gender(dto.gender())
                 .birth(dto.birth())
                 .address(dto.address())
+                .phone(dto.phoneNum())
+                .email(dto.email())
+                .socialId(dto.email())
+                .socialType(SocialType.NONE)
                 .build();
     }
 
-    public static MemberResDTO.Signup toSignup(Member member) {
+    public static MemberResDTO.Signup toResultSignup(Member member) {
         return MemberResDTO.Signup.builder()
-                .userId(member.getId())
+                .memberId(member.getId())
                 .name(member.getName())
+                .build();
+    }
+
+    public static MemberTerm toMemberTerm(Member member, Term term){
+        return MemberTerm.builder()
+                .member(member)
+                .term(term)
+                .build();
+    }
+
+    public static MemberFood toMemberFood(Member member, Food food){
+        return MemberFood.builder()
+                .member(member)
+                .food(food)
                 .build();
     }
 }

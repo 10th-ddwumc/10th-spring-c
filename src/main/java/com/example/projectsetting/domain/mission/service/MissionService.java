@@ -10,11 +10,13 @@ import com.example.projectsetting.domain.mission.dto.MissionReqDTO;
 import com.example.projectsetting.domain.mission.dto.MissionResDTO;
 import com.example.projectsetting.domain.mission.entity.Mission;
 import com.example.projectsetting.domain.mission.entity.Store;
+import com.example.projectsetting.domain.mission.entity.mapping.MemberMission;
 import com.example.projectsetting.domain.mission.enums.Status;
 import com.example.projectsetting.domain.mission.exception.MissionException;
 import com.example.projectsetting.domain.mission.exception.StoreException;
 import com.example.projectsetting.domain.mission.exception.code.MissionErrorCode;
 import com.example.projectsetting.domain.mission.exception.code.StoreErrorCode;
+import com.example.projectsetting.domain.mission.repository.MemberMissionRepository;
 import com.example.projectsetting.domain.mission.repository.MissionRepository;
 import com.example.projectsetting.domain.mission.repository.StoreRepository;
 import com.example.projectsetting.global.apiPayload.ApiResponse;
@@ -37,6 +39,7 @@ public class MissionService {
 
     private final MemberRepository memberRepository;
     private final MissionRepository missionRepository;
+    private final MemberMissionRepository memberMissionRepository;
     private final StoreRepository storeRepository;
 
     // 가게 미션 생성
@@ -170,13 +173,15 @@ public class MissionService {
         PageRequest pageRequest = PageRequest.of(pageNumber,pageSize, sortInfo);
 
         //진행중인 미션 조회
-        Page<Mission> missionList = missionRepository.findMissionByStatusOrderByIdDesc(dto.userId(), pageRequest);
+        Page<MemberMission> memberMissionList = memberMissionRepository.findAllByMember_IdAndStatusOrderByIdDesc(dto.userId(), Status.IN_PROGRESS, pageRequest);
 
         //미션들 응답 DTO로 포장하기
         return MissionConverter.toOffsetPagination(
-                missionList.map(MissionConverter::toGetInProgressMission).toList(),
-                missionList.getNumber(),
-                missionList.getSize()
+                memberMissionList
+                        .map(memberMission -> MissionConverter.toGetInProgressMission(memberMission.getMission()))
+                        .toList(),
+                memberMissionList.getNumber(),
+                memberMissionList.getSize()
         );
     }
 
