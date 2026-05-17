@@ -46,14 +46,17 @@ public class Member extends BaseEntity {
     @Column(name = "detail_address", nullable = false)
     private String detailAddress;
 
-    @Column(name = "social_uid", nullable = false)
+    @Column(name = "social_uid")
     private String social_uid;
 
     @Column(name = "profile_url")
     private String profileUrl;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
+
+    @Column(name = "password")
+    private String password;
 
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
