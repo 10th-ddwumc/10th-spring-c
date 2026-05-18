@@ -16,6 +16,7 @@ public enum MemberSuccessCode implements BaseSuccessCode {
     SUCCESS_SIGNUP(HttpStatus.CREATED,
             "MEMBER201_1",
             "회원가입에 성공했습니다."),
+
     SUCCESS_HOME(HttpStatus.OK,
             "MEMBER200_1",
             "홈화면 조회에 성공했습니다.");

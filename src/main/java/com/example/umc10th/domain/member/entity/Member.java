@@ -31,6 +31,9 @@ public class Member extends BaseEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "phone")
     private String phoneNumber;
 

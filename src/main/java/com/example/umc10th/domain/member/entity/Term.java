@@ -21,4 +21,7 @@ public class Term {
     @Column(name = "name")
     @Enumerated(EnumType.STRING)
     private TermName name;
+
+    @Column(name = "required")
+    private Boolean required;
 }

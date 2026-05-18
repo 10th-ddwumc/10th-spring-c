@@ -34,7 +34,7 @@ public class MemberController {
     public ApiResponse<MemberResDTO.signUp> signUp(
             @RequestBody MemberReqDTO.signUp dto
     ) {
-        BaseSuccessCode code = MemberSuccessCode.OK;
+        BaseSuccessCode code = MemberSuccessCode.SUCCESS_SIGNUP;
         return ApiResponse.onSuccess(code, memberService.signUp(dto));
     }
 

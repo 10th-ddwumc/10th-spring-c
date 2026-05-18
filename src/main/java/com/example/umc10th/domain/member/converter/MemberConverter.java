@@ -35,4 +35,10 @@ public class MemberConverter {
                 .missions(missions)
                 .build();
     }
+
+    public static MemberResDTO.signUp toSignUp(Member member) {
+        return MemberResDTO.signUp.builder()
+                .id(member.getId())
+                .build();
+    }
 }

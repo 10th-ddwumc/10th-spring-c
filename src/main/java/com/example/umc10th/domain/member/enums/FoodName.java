@@ -2,6 +2,15 @@ package com.example.umc10th.domain.member.enums;
 
 public enum FoodName {
     KOREAN,
+    JAPANESE,
     CHINESE,
-    JAPANESE
+    WESTERN,
+    CHICKEN,
+    SNACK,
+    MEAT,
+    PACKEDMEAL,
+    NIGHT,
+    FAST,
+    DESSERT,
+    ASIAN
 }
