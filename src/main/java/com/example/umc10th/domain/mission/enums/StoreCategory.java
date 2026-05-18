@@ -1,0 +1,7 @@
+package com.example.umc10th.domain.mission.enums;
+
+public enum StoreCategory {
+    KOREAN,
+    CHINESE,
+    JAPANESE
+}
