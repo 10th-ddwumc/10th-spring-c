@@ -29,6 +29,7 @@ public class MemberConverter {
                 .address(dto.address())
                 .detailAddress(dto.detailAddress())
                 .phoneNumber(dto.phoneNumber())
+                .social_uid("")   // 폼 로그인 회원은 소셜 UID 없음
                 .build();
     }
 
