@@ -17,11 +17,14 @@ import com.example.umc10th.domain.mission.dto.MissionResDTO;
 import com.example.umc10th.domain.mission.entity.Mission;
 import com.example.umc10th.domain.mission.repository.MemberMissionRepository;
 import com.example.umc10th.domain.mission.repository.MissionRepository;
+import com.example.umc10th.global.security.entity.AuthMember;
+import com.example.umc10th.global.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -43,15 +46,13 @@ public class MemberService {
     private final MemberTermRepository memberTermRepository;
 
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     //마이페이지 조회
     public MemberResDTO.GetInfo getInfo(
-            MemberReqDTO.GetInfo dto)
+            AuthMember member)
     {
-        Long memberId = dto.id();
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND));
-        return MemberConverter.toGetInfo(member);
+        return MemberConverter.toGetInfo(member.getMember());
     }
 
     //회원가입
@@ -165,5 +166,22 @@ public class MemberService {
         Integer successMission = memberMissionRepository.countSuccessMissionsByLocation(memberId, location);
 
         return MemberConverter.toHome(location, allMissions, successMission, missions);
+    }
+
+    @Transactional
+    public MemberResDTO.Login login(MemberReqDTO.Login dto) {
+        Member member = memberRepository.findByEmail(dto.email())
+                .orElseThrow(() ->
+                        new MemberException(MemberErrorCode.NOT_FOUND));
+
+        if (!passwordEncoder.matches(dto.password(), member.getPassword())) {
+            throw new MemberException(MemberErrorCode.INVALID_PASSWORD);
+        }
+
+        String accessToken = jwtUtil.createAccessToken(
+                new AuthMember(member)
+        );
+
+        return MemberConverter.toLogin(accessToken);
     }
 }

@@ -7,9 +7,11 @@ import com.example.umc10th.domain.member.exception.code.MemberSuccessCode;
 import com.example.umc10th.domain.member.service.MemberService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.global.apiPayload.code.BaseSuccessCode;
+import com.example.umc10th.global.security.entity.AuthMember;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -20,13 +22,22 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    //마이페이지 조회
+    /*//마이페이지 조회
     @PostMapping("/api/v1/users/me")
     public ApiResponse<MemberResDTO.GetInfo> getInfo(
             @RequestBody @Valid MemberReqDTO.GetInfo dto
     ) {
         BaseSuccessCode code = MemberSuccessCode.OK;
         return ApiResponse.onSuccess(code, memberService.getInfo(dto));
+    }*/
+
+    //마이페이지 조회 v1
+    @PostMapping("/api/v2/users/me")
+    public ApiResponse<MemberResDTO.GetInfo> getInfo(
+            @AuthenticationPrincipal AuthMember member
+    ) {
+        BaseSuccessCode code = MemberSuccessCode.OK;
+        return ApiResponse.onSuccess(code, memberService.getInfo(member));
     }
 
     //회원가입
@@ -49,5 +60,13 @@ public class MemberController {
     ) {
         BaseSuccessCode code = MemberSuccessCode.SUCCESS_HOME;
         return ApiResponse.onSuccess(code, memberService.home(memberId, location, lastId, pageSize));
+    }
+
+    @PostMapping("/auth/login")
+    public ApiResponse<MemberResDTO.Login> login(
+            @RequestBody MemberReqDTO.Login dto
+    ) {
+        BaseSuccessCode code = MemberSuccessCode.SUCCESS_LOGIN;
+        return ApiResponse.onSuccess(code, memberService.login(dto));
     }
 }

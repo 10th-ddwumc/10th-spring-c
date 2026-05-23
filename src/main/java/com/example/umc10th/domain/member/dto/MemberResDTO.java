@@ -29,4 +29,10 @@ public class MemberResDTO {
             Integer successMissionsCount,
             List<HomeMission> missions
     ) {}
+
+    @Builder
+    public record Login(
+            String accessToken
+    ) {
+    }
 }
