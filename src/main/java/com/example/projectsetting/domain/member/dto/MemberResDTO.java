@@ -6,12 +6,17 @@ import java.util.List;
 
 public class MemberResDTO {
 
+    @Builder
+    public record Login(
+            String accessToken
+    ){}
 
     @Builder
     public record Signup(
         Long memberId,
         String name,
-        String email
+        String email,
+        String accessToken
     ){}
 
     @Builder

@@ -22,5 +22,8 @@ public class MemberReqDTO {
            List<FoodName> favoriteFoods
    ){}
 
-
+   public record Login(
+           String email,
+           String password
+   ){}
 }

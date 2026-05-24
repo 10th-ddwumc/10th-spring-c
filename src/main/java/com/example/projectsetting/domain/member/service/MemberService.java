@@ -15,6 +15,8 @@ import com.example.projectsetting.domain.mission.entity.Mission;
 import com.example.projectsetting.domain.mission.repository.MissionRepository;
 import com.example.projectsetting.global.apiPayload.ApiResponse;
 import com.example.projectsetting.global.apiPayload.code.BaseSuccessCode;
+import com.example.projectsetting.global.security.entity.AuthMember;
+import com.example.projectsetting.global.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.Repository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +35,8 @@ public class MemberService {
     private final FoodRepository foodRepository;
     private final MemberTermRepository memberTermRepository;
     private final MemberFoodRepository memberFoodRepository;
+    private final JwtUtil jwtUtil;
+
     public ApiResponse<MemberResDTO.Signup> signup(BaseSuccessCode code, MemberReqDTO.Signup dto) {
 
         String encodedPassword = passwordEncoder.encode(dto.password());
@@ -54,6 +58,18 @@ public class MemberService {
         return ApiResponse.onSuccess(code,MemberConverter.toResultSignup(savedmember));
     }
 
+    public ApiResponse<MemberResDTO.Login> login(BaseSuccessCode code, MemberReqDTO.Login dto) {
+        Member member = memberRepository.findByEmail(dto.email())
+                .orElseThrow(()-> new MemberException(MemberErrorCode.NOT_FOUND));
+
+        if(!passwordEncoder.matches(dto.password(), member.getPassword())){
+            throw new MemberException(MemberErrorCode.NOT_FOUND);
+        }
+
+        String accessToken = jwtUtil.createAccessToken(new AuthMember(member));
+        return ApiResponse.onSuccess(code, MemberConverter.toLogin(accessToken));
+    }
+
     public MemberResDTO.Dashboard getDashboard(String authorization) {
 
         //임시값
@@ -69,15 +85,13 @@ public class MemberService {
     }
 
 
-    public MemberResDTO.Mypage getMypage(String authorization) {
+    public MemberResDTO.Mypage getMypage(AuthMember member) {
 
-        //임시값
-        Long memberId = 1L;
-
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(()-> new MemberException(MemberErrorCode.NOT_FOUND));
-        return MemberConverter.toResultMypage(member);
+        return MemberConverter.toResultMypage(member.getMember());
     }
+
+
+
 
 
 }

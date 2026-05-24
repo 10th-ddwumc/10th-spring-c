@@ -10,6 +10,7 @@ import com.example.projectsetting.domain.member.entity.mapping.MemberTerm;
 import com.example.projectsetting.domain.member.enums.SocialType;
 import com.example.projectsetting.domain.mission.dto.MissionResDTO;
 import com.example.projectsetting.domain.mission.entity.Mission;
+import com.example.projectsetting.global.security.dto.OAuthDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,10 +67,11 @@ public class MemberConverter {
                 .build();
     }
 
-    public static MemberResDTO.Signup toResultSignup(Member member) {
+    public static MemberResDTO.Signup toResultSignup(Member member, String accessToken) {
         return MemberResDTO.Signup.builder()
                 .memberId(member.getId())
                 .name(member.getName())
+                .accessToken(accessToken)
                 .build();
     }
 
@@ -84,6 +86,22 @@ public class MemberConverter {
         return MemberFood.builder()
                 .member(member)
                 .food(food)
+                .build();
+    }
+
+    public static MemberResDTO.Login toLogin(String accessToken){
+        return MemberResDTO.Login.builder()
+                .accessToken(accessToken)
+                .build();
+    }
+
+
+    public static Member toMember(OAuthDTO dto) {
+        return Member.builder()
+                .socialType(dto.getSocialType())
+                .socialId(dto.getSocialUid())
+                .email(dto.getSocialEmail())
+                .name(dto.getName())
                 .build();
     }
 }

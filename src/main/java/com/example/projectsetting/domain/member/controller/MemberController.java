@@ -6,7 +6,9 @@ import com.example.projectsetting.domain.member.exception.code.MemberSuccessCode
 import com.example.projectsetting.domain.member.service.MemberService;
 import com.example.projectsetting.global.apiPayload.ApiResponse;
 import com.example.projectsetting.global.apiPayload.code.BaseSuccessCode;
+import com.example.projectsetting.global.security.entity.AuthMember;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +19,15 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+
+    //로그인
+    @PostMapping("/login")
+    public ApiResponse<MemberResDTO.Login> login(
+            @RequestBody MemberReqDTO.Login dto
+    ){
+        BaseSuccessCode code = MemberSuccessCode.OK;
+        return memberService.login(code,dto);
+    }
 
     //회원가입
     @PostMapping
@@ -40,10 +51,10 @@ public class MemberController {
     //마이페이지
     @GetMapping("/me")
         public ApiResponse<MemberResDTO.Mypage> getMypage(
-                @RequestHeader("Authorization") String authorization
-    ){
+            @AuthenticationPrincipal AuthMember member
+        ){
         BaseSuccessCode code = MemberSuccessCode.OK;
-        MemberResDTO.Mypage result = memberService.getMypage(authorization);
+        MemberResDTO.Mypage result = memberService.getMypage(member);
         return ApiResponse.onSuccess(code, result);
     }
 
