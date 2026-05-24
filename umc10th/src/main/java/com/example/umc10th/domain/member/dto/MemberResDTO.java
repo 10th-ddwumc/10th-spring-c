@@ -23,4 +23,13 @@ public class MemberResDTO {
             String email,
             LocalDateTime createdAt
     ) {}
+
+    // 로그인 응답
+    @Builder
+    public record LoginResultDto(
+            String accessToken,
+            String tokenType,
+            Long memberId,
+            String email
+    ) {}
 }

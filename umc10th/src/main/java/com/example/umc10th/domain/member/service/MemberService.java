@@ -7,7 +7,11 @@ import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.member.exception.MemberException;
 import com.example.umc10th.domain.member.exception.code.MemberErrorCode;
 import com.example.umc10th.domain.member.repository.MemberRepository;
+import com.example.umc10th.global.config.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,9 +22,11 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
 
-    public MemberResDTO.GetInfo getInfo(MemberReqDTO.GetInfo dto) {
-        Member member = memberRepository.findById(dto.getId())
+    public MemberResDTO.GetInfo getInfo(Long memberId) {
+        Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
         return MemberConverter.toGetInfoResDTO(member);
     }
@@ -41,5 +47,23 @@ public class MemberService {
         Member savedMember = memberRepository.save(member);
 
         return MemberConverter.toSignUpResultDto(savedMember);
+    }
+
+    // 로그인 → JWT 발급
+    public MemberResDTO.LoginResultDto login(MemberReqDTO.LoginDto dto) {
+        // 이메일/비밀번호 검증 (실패 시 Spring Security가 예외 던짐)
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(dto.email(), dto.password())
+        );
+
+        Member member = (Member) authentication.getPrincipal();
+        String token = jwtUtil.generateToken(member);
+
+        return MemberResDTO.LoginResultDto.builder()
+                .accessToken(token)
+                .tokenType("Bearer")
+                .memberId(member.getId())
+                .email(member.getEmail())
+                .build();
     }
 }

@@ -20,6 +20,13 @@ public class MemberReqDTO {
         private Long id;
     }
 
+    // 로그인
+    public record LoginDto(
+            @NotBlank(message = "이메일은 필수입니다.")
+            @Email(message = "올바른 이메일 형식이 아닙니다.") String email,
+            @NotBlank(message = "비밀번호는 필수입니다.") String password
+    ) {}
+
     // 회원가입
     public record SignUpDto(
             @NotBlank(message = "이름은 필수입니다.") String name,
