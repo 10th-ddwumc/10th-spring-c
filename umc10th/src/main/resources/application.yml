@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: "umc10th"
+
+  config:
+    import: optional:file:.env[.properties]   # .env 파일이 있으면 환경변수로 로드
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PW}
+
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+jwt:
+  secret: ${JWT_SECRET:umc10th-jwt-secret-key-must-be-at-least-32-characters-long}
+  expiration: 86400000   # 24시간 (ms)
