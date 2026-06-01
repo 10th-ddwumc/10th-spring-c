@@ -1,0 +1,73 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  # ── 1. 빌드 ────────────────────────────────────────────────────────
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 코드 체크아웃
+        uses: actions/checkout@v4
+
+      - name: Java 21 설정
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: gradlew 실행 권한 부여
+        run: chmod +x gradlew
+
+      - name: Gradle 빌드 (테스트 제외)
+        run: ./gradlew build -x test
+
+      - name: 빌드된 .jar 업로드
+        uses: actions/upload-artifact@v4
+        with:
+          name: BackEnd
+          path: build/libs/*.jar
+
+  # ── 2. 배포 ────────────────────────────────────────────────────────
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: .jar 다운로드
+        uses: actions/download-artifact@v4
+        with:
+          name: BackEnd
+          path: build/libs/
+
+      - name: EC2 배포
+        env:
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          ENV: ${{ secrets.ENV }}
+        run: |
+          # PEM 키 파일 생성
+          echo "$EC2_SSH_KEY" > private_key.pem
+          chmod 600 private_key.pem
+
+          # plain.jar 제외하고 실행 .jar 선택
+          jar_file=$(find build/libs -name '*.jar' ! -name '*plain.jar' | head -n 1)
+
+          # EC2로 .jar 전송
+          scp -i private_key.pem -o StrictHostKeyChecking=no \
+            "$jar_file" $EC2_USERNAME@$EC2_HOST:/home/$EC2_USERNAME/BackEnd.jar
+
+          # .env 전송 & 기존 프로세스 종료 & 새 버전 실행
+          echo "$ENV" | ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST "
+            cat > .env
+            pgrep java | xargs -r kill -15
+            sleep 10
+            nohup java -jar /home/$EC2_USERNAME/BackEnd.jar > app.log 2>&1 &
+          "
+
+          # PEM 키 삭제 (보안)
+          rm -f private_key.pem
